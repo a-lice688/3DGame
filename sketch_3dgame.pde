@@ -1,7 +1,4 @@
-//Jun 4, 2025
-
-import java.awt.Robot;
-Robot robot;
+//June 4, 2025
 
 color black = #000000;
 color white = #FFFFFF;
@@ -9,17 +6,18 @@ color white = #FFFFFF;
 int gridSize;
 PImage map;
 
-boolean skipFrame;
-
 boolean wkey, akey, skey, dkey;
 float eyeX, eyeY, eyeZ, focusX, focusY, focusZ, upX, upY, upZ;
 float leftRightHeadAngle, upDownHeadAngle;
 
+float lastMouseX, lastMouseY;
+boolean firstFrame = true;
 
 void setup() {
   fullScreen(P3D);
   textureMode(NORMAL);
   wkey = akey = skey = dkey = false;
+
   eyeX = width/2;
   eyeY = height/2;
   eyeZ = 0;
@@ -36,17 +34,9 @@ void setup() {
   gridSize = 100;
 
   leftRightHeadAngle = radians(270);
-
   noCursor();
 
-  try {
-    robot = new Robot();
-  }
-  catch (Exception e) {
-    e.printStackTrace();
-  }
-
-  skipFrame = false;
+  firstFrame = true;
 }
 
 void draw() {
@@ -55,8 +45,49 @@ void draw() {
   drawFloor();
   drawFocalPoint();
   controlCamera();
-
   drawMap();
+
+  if (firstFrame) {
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+    firstFrame = false;
+  } else {
+    float deltaX = mouseX - lastMouseX;
+    float deltaY = mouseY - lastMouseY;
+
+    leftRightHeadAngle += deltaX * 0.01;
+    upDownHeadAngle += deltaY * 0.01;
+
+    upDownHeadAngle = constrain(upDownHeadAngle, -PI/2.5, PI/2.5);
+
+
+
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+  }
+}
+
+void controlCamera() {
+  if (wkey) {
+    eyeX += cos(leftRightHeadAngle) * 10;
+    eyeZ += sin(leftRightHeadAngle) * 10;
+  }
+  if (skey) {
+    eyeX -= cos(leftRightHeadAngle) * 10;
+    eyeZ -= sin(leftRightHeadAngle) * 10;
+  }
+  if (akey) {
+    eyeX -= cos(leftRightHeadAngle + HALF_PI) * 10;
+    eyeZ -= sin(leftRightHeadAngle + HALF_PI) * 10;
+  }
+  if (dkey) {
+    eyeX += cos(leftRightHeadAngle + HALF_PI) * 10;
+    eyeZ += sin(leftRightHeadAngle + HALF_PI) * 10;
+  }
+
+  focusX = eyeX + cos(leftRightHeadAngle) * 300;
+  focusZ = eyeZ + sin(leftRightHeadAngle) * 300;
+  focusY = eyeY + tan(upDownHeadAngle) * 300;
 }
 
 void drawMap() {
@@ -67,7 +98,7 @@ void drawMap() {
         pushMatrix();
         fill(c);
         stroke(100);
-        translate(x*gridSize - 2000, height/2, y*gridSize - 2000);
+        translate(x * gridSize - 2000, height / 2, y * gridSize - 2000);
         box(gridSize, height, gridSize);
         popMatrix();
       }
@@ -78,8 +109,8 @@ void drawMap() {
 void drawFloor() {
   stroke(255);
   for (int x = -2000; x <= 2000; x += 100) {
-    line(x, height, -2000, x, height, 2000) ;
-    line(-2000, height, x, 2000, height, x) ;
+    line(x, height, -2000, x, height, 2000);
+    line(-2000, height, x, 2000, height, x);
   }
 }
 
@@ -88,50 +119,6 @@ void drawFocalPoint() {
   translate(focusX, focusY, focusZ);
   sphere(5);
   popMatrix();
-}
-
-void controlCamera() {
-  if (wkey) {
-    eyeX += cos(leftRightHeadAngle)*10;
-    eyeZ += sin(leftRightHeadAngle)*10;
-  }
-  if (skey) {
-    eyeX -= cos(leftRightHeadAngle)*10;
-    eyeZ -= sin(leftRightHeadAngle)*10;
-  }
-  if (akey) {
-    eyeX -= cos(leftRightHeadAngle + PI/2)*10;
-    eyeZ -= sin(leftRightHeadAngle + PI/2)*10;
-  }
-  if (dkey) {
-    eyeX += cos(leftRightHeadAngle + PI/2)*10;
-    eyeZ += sin(leftRightHeadAngle + PI/2)*10;
-  }
-
-  if (!skipFrame) {
-    leftRightHeadAngle += (mouseX - pmouseX)*0.01;
-    upDownHeadAngle += (mouseY - pmouseY)*0.01;
-  }
-
-  if (upDownHeadAngle > PI/2.5) upDownHeadAngle = PI/2.5; //max
-  if (upDownHeadAngle < -PI/2.5) upDownHeadAngle = -PI/2.5; //max
-
-
-  focusX = eyeX + cos(leftRightHeadAngle)*300;
-  focusZ = eyeZ + sin(leftRightHeadAngle)*300;
-  focusY = eyeY + tan(upDownHeadAngle)*300;
-
-  //  if (mouseX < 2) {
-  //    robot.mouseMove(width - 3, mouseY);
-  //    skipFrame = true;
-
-  //  } else if (mouseX > width - 2) {
-  //    robot.mouseMove(3, mouseY);
-  //    skipFrame = true;
-  //  } else {
-  //    skipFrame = false;
-  //  }
-  //  //println(eyeX, eyeY, eyeZ);
 }
 
 void keyPressed() {
