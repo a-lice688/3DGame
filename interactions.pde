@@ -17,3 +17,9 @@ void keyReleased() {
   if (key == 'W' || key == 'w') qkey = false;
   if (key == 'R' || key == 'r') ekey = false;
 }
+
+void mousePressed() {
+  for (SpellBook b : currentBooks) {
+    b.open();
+  }
+}

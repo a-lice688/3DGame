@@ -1,126 +1,131 @@
 void texturedCube(float x, float y, float z, PImage texture, float size) {
-
-  pushMatrix();
-  translate(x, y, z);
-  scale(size);
-  noStroke();
-  texture(texture);
-
-  beginShape(QUADS);
-  texture(texture);
-  //top  x, y, z, tx, ty
-  vertex(0, 0, 0, 0, 0);
-  vertex(1, 0, 0, 1, 0);
-  vertex(1, 0, 1, 1, 1);
-  vertex(0, 0, 1, 0, 1);
-  endShape();
-
-  //bottom
-  beginShape(QUADS);
-  texture(texture);
-  vertex(0, 1, 0, 0, 0);
-  vertex(1, 1, 0, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(0, 1, 1, 0, 1);
-  endShape();
-
-  //left
-  beginShape(QUADS);
-  texture(texture);
-  vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, 1, 1, 0);
-  vertex(0, 1, 1, 1, 1);
-  vertex(0, 1, 0, 0, 1);
-  endShape();
-
-  //right
-  beginShape(QUADS);
-  texture(texture);
-  vertex(1, 0, 0, 0, 0);
-  vertex(1, 0, 1, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(1, 1, 0, 0, 1);
-  endShape();
-
-  //back
-  beginShape(QUADS);
-  texture(texture);
-  vertex(0, 0, 0, 0, 0);
-  vertex(1, 0, 0, 1, 0);
-  vertex(1, 1, 0, 1, 1);
-  vertex(0, 1, 0, 0, 1);
-  endShape();
-
-  //front
-  beginShape(QUADS);
-  texture(texture);
-  vertex(0, 0, 1, 0, 0);
-  vertex(1, 0, 1, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(0, 1, 1, 0, 1);
-  endShape();
-
-  popMatrix();
-}
-void texturedCube(float x, float y, float z, PImage top, PImage side, PImage bottom, float size) {
-  pushMatrix();
-  translate(x, y, z);
-  scale(size);
-  noStroke();
+  world.pushMatrix();
+  world.translate(x, y, z);
+  world.noStroke();
 
   // Top
-  beginShape(QUADS);
-  texture(top);
-  vertex(0, 0, 0, 0, 0);
-  vertex(1, 0, 0, 1, 0);
-  vertex(1, 0, 1, 1, 1);
-  vertex(0, 0, 1, 0, 1);
-  endShape();
+  world.beginShape(QUADS);
+  world.texture(texture);
+
+  float s = size;
+
+  //float u = s / texture.width;
+  //float v = s / texture.height;
+
+
+  world.vertex(0, 0, 0, 0, 0);
+  world.vertex(s, 0, 0, 1, 0);
+  world.vertex(s, 0, s, 1, 1);
+  world.vertex(0, 0, s, 0, 1);
+  world.endShape();
 
   // Bottom
-  beginShape(QUADS);
-  texture(bottom);
-  vertex(0, 1, 0, 0, 0);
-  vertex(1, 1, 0, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(0, 1, 1, 0, 1);
-  endShape();
+  world.beginShape(QUADS);
+  world.texture(texture);
+  world.vertex(0, s, 0, 0, 0);
+  world.vertex(s, s, 0, 1, 0);
+  world.vertex(s, s, s, 1, 1);
+  world.vertex(0, s, s, 0, 1);
+  world.endShape();
 
   // Left
-  beginShape(QUADS);
-  texture(side);
-  vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, 1, 1, 0);
-  vertex(0, 1, 1, 1, 1);
-  vertex(0, 1, 0, 0, 1);
-  endShape();
+  world.beginShape(QUADS);
+  world.texture(texture);
+  world.vertex(0, 0, 0, 0, 0);
+  world.vertex(0, 0, s, 1, 0);
+  world.vertex(0, s, s, 1, 1);
+  world.vertex(0, s, 0, 0, 1);
+  world.endShape();
 
   // Right
-  beginShape(QUADS);
-  texture(side);
-  vertex(1, 0, 0, 0, 0);
-  vertex(1, 0, 1, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(1, 1, 0, 0, 1);
-  endShape();
-
-  // Front
-  beginShape(QUADS);
-  texture(side);
-  vertex(0, 0, 1, 0, 0);
-  vertex(1, 0, 1, 1, 0);
-  vertex(1, 1, 1, 1, 1);
-  vertex(0, 1, 1, 0, 1);
-  endShape();
+  world.beginShape(QUADS);
+  world.texture(texture);
+  world.vertex(s, 0, 0, 0, 0);
+  world.vertex(s, 0, s, 1, 0);
+  world.vertex(s, s, s, 1, 1);
+  world.vertex(s, s, 0, 0, 1);
+  world.endShape();
 
   // Back
-  beginShape(QUADS);
-  texture(side);
-  vertex(0, 0, 0, 0, 0);
-  vertex(1, 0, 0, 1, 0);
-  vertex(1, 1, 0, 1, 1);
-  vertex(0, 1, 0, 0, 1);
-  endShape();
+  world.beginShape(QUADS);
+  world.texture(texture);
+  world.vertex(0, 0, s, 0, 0);
+  world.vertex(s, 0, s, 1, 0);
+  world.vertex(s, s, s, 1, 1);
+  world.vertex(0, s, 0, 0, 1);
+  world.endShape();
 
-  popMatrix();
+  // Front
+  world.beginShape(QUADS);
+  world.texture(texture);
+  world.vertex(0, 0, 1, 0, 0);
+  world.vertex(s, 0, 1, 1, 0);
+  world.vertex(s, s, 1, 1, 1);
+  world.vertex(0, s, 1, 0, 1);
+  world.endShape();
+
+  world.popMatrix();
+}
+
+void texturedCube(float x, float y, float z, PImage top, PImage side, PImage bottom, float size) {
+  world.pushMatrix();
+  world.translate(x, y, z);
+  world.scale(size);
+  world.noStroke();
+
+  // Top
+  world.beginShape(QUADS);
+  world.texture(top);
+  world.vertex(0, 0, 0, 0, 0);
+  world.vertex(1, 0, 0, 1, 0);
+  world.vertex(1, 0, 1, 1, 1);
+  world.vertex(0, 0, 1, 0, 1);
+  world.endShape();
+
+  // Bottom
+  world.beginShape(QUADS);
+  world.texture(bottom);
+  world.vertex(0, 1, 0, 0, 0);
+  world.vertex(1, 1, 0, 1, 0);
+  world.vertex(1, 1, 1, 1, 1);
+  world.vertex(0, 1, 1, 0, 1);
+  world.endShape();
+
+  // Left
+  world.beginShape(QUADS);
+  world.texture(side);
+  world.vertex(0, 0, 0, 0, 0);
+  world.vertex(0, 0, 1, 1, 0);
+  world.vertex(0, 1, 1, 1, 1);
+  world.vertex(0, 1, 0, 0, 1);
+  world.endShape();
+
+  // Right
+  world.beginShape(QUADS);
+  world.texture(side);
+  world.vertex(1, 0, 0, 0, 0);
+  world.vertex(1, 0, 1, 1, 0);
+  world.vertex(1, 1, 1, 1, 1);
+  world.vertex(1, 1, 0, 0, 1);
+  world.endShape();
+
+  // Front
+  world.beginShape(QUADS);
+  world.texture(side);
+  world.vertex(0, 0, 1, 0, 0);
+  world.vertex(1, 0, 1, 1, 0);
+  world.vertex(1, 1, 1, 1, 1);
+  world.vertex(0, 1, 1, 0, 1);
+  world.endShape();
+
+  // Back
+  world.beginShape(QUADS);
+  world.texture(side);
+  world.vertex(0, 0, 0, 0, 0);
+  world.vertex(1, 0, 0, 1, 0);
+  world.vertex(1, 1, 0, 1, 1);
+  world.vertex(0, 1, 0, 0, 1);
+  world.endShape();
+
+  world.popMatrix();
 }

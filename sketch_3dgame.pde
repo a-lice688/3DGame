@@ -1,90 +1,111 @@
-//Jun 4, 2025
+//June, 2025
 
-//import java.awt.Robot;
-//Robot robot;
-//boolean skipFrame;
 
 import java.util.ArrayList;
-ArrayList <GameObject> objects = new ArrayList<GameObject>();
 
-color black = #000000; //oakplanks
-color white = #FFFFFF; //empty space
-color dullBlue = #7092BE; //grassBlock
+ArrayList<GameObject> objects = new ArrayList<GameObject>();
+ArrayList<SpellBook> currentBooks = new ArrayList<SpellBook>();
+ArrayList<String> learnedSpells = new ArrayList<String>();
 
-int gridSize;
+String[] spellNames = {
+  "Avada Kedavra", "Imperio", "Sectumsempra",
+  "Confringo", "Glacius", "Reducto"
+};
+
+String[] spellEffects = {
+  "Instantly destroys target",
+  "Control an enemy temporarily",
+  "Slice enemy in half",
+  "Big explosion",
+  "Freeze enemy in place",
+  "Break walls or objects"
+};
+
+color black = #000000;
+color white = #FFFFFF;
+color dullBlue = #7092BE;
+
+int gridSize = 50;
 PImage map;
 PImage grassBlock;
 PImage oakPlanks;
-PImage stoneBricks;
+PImage rockWalls;
 
 boolean wkey, akey, skey, dkey, qkey, ekey;
-float eyeX, eyeY, eyeZ, focusX, focusY, focusZ, upX, upY, upZ;
-float leftRightHeadAngle, upDownHeadAngle;
 
-float moveSpeed = 10;
+PGraphics world;
+PGraphics HUD;
 
-
+Player player;
 
 void setup() {
+  fullScreen(P3D);
+
+  world = createGraphics(displayWidth, displayHeight, P3D);
+  HUD = createGraphics(displayWidth, displayHeight, P2D);
+
+  player = new Player();
 
   grassBlock = loadImage("Grass_Block_Top_C.png");
   oakPlanks = loadImage("Oak_Log_Top.png");
-  stoneBricks = loadImage("Stone_Bricks.png");
-
-  fullScreen(P3D);
-  textureMode(NORMAL);
-  wkey = akey = skey = dkey = false;
-  eyeX = width/2;
-  eyeY = 9*height/10;
-  eyeZ = 0;
-
-  focusX = width/2;
-  focusY = height/2;
-  focusZ = 10;
-
-  upX = 0;
-  upY = 1;
-  upZ = 0;
+  rockWalls = loadImage("Rock_Walls.png");
 
   map = loadImage("map.png");
-  gridSize = 100;
 
-  leftRightHeadAngle = radians(270);
+  int spawnX = 0;
+  int spawnY = 0;
+
+  for (int x = 0; x < map.width; x++) {
+    for (int y = 0; y < map.height; y++) {
+      if (map.get(x, y) == white) {
+        spawnX = x;
+        spawnY = y;
+        break;
+      }
+    }
+  }
+
+  float wx = (spawnX - map.width / 2.0) * gridSize;
+  float wz = (spawnY - map.height / 2.0) * gridSize;
+  player.eye.set(wx, height - gridSize * 1.5, wz);
+  player.focus.set(wx, height - gridSize * 1.5, wz + 100);
+
+  world.textureMode(NORMAL);
+  wkey = akey = skey = dkey = qkey = ekey = false;
 
   noCursor();
-
-  //try {
-  //  robot = new Robot();
-  //}
-  //catch (Exception e) {
-  //  e.printStackTrace();
-  //}
-
-  //skipFrame = false;
 }
 
 void draw() {
-  background(0);
-  move();
+  player.update();
+
+  world.beginDraw();
+  world.textureMode(NORMAL);
+  world.background(0);
+  world.ambientLight(100, 100, 100);
+  world.pointLight(255, 255, 255, player.eye.x, player.eye.y, player.eye.z);
+  player.applyCamera();
+
   drawAxis();
-
-  pointLight(255, 255, 255, eyeX, eyeY, eyeZ);
-  camera(eyeX, eyeY, eyeZ, focusX, focusY, focusZ, upX, upY, upZ);
-
-  drawFloor(-2000, 2000, -2000, 2000, height - gridSize*4, gridSize); //ceiling
-  drawFloor(-2000, 2000, -2000, 2000, height, gridSize); //floor
-
+  drawMazeFloor();
   drawMap();
 
-  int i = 0;
-  while (i < objects.size()) {
+  for (int i = 0; i < objects.size(); i++) {
     GameObject obj = objects.get(i);
     obj.show();
     obj.act();
     if (obj.lives == 0) {
-      objects.remove(i);
-    } else {
-      i++;
+      objects.remove(i--);
     }
   }
+
+  world.endDraw();
+  image(world, 0, 0);
+
+  float maxAngle = PI / 2.5;
+  float weight = map(abs(player.upDownHeadAngle), 0, maxAngle, 6, 2);
+  stroke(255);
+  strokeWeight(weight);
+  line(width / 2 - 15, height / 2, width / 2 + 15, height / 2);
+  line(width / 2, height / 2 - 15, width / 2, height / 2 + 15);
 }
