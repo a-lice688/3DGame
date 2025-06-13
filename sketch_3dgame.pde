@@ -30,6 +30,7 @@ PImage map;
 PImage grassBlock;
 PImage oakPlanks;
 PImage rockWalls;
+PImage floor;
 
 boolean wkey, akey, skey, dkey, qkey, ekey;
 
@@ -48,7 +49,8 @@ void setup() {
 
   grassBlock = loadImage("Grass_Block_Top_C.png");
   oakPlanks = loadImage("Oak_Log_Top.png");
-  rockWalls = loadImage("Rock_Walls.png");
+  rockWalls = loadImage("StoneWall.png");
+  floor = loadImage("floor.png");
 
   map = loadImage("map.png");
 
@@ -71,6 +73,8 @@ void setup() {
   player.focus.set(wx, height - gridSize * 1.5, wz + 100);
 
   world.textureMode(NORMAL);
+  world.noStroke();
+
   wkey = akey = skey = dkey = qkey = ekey = false;
 
   noCursor();

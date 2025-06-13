@@ -2,28 +2,31 @@ void drawMap() {
   for (int x = 0; x < map.width; x++) {
     for (int y = 0; y < map.height; y++) {
       color c = map.get(x, y);
-      float wx = (x - map.width / 2.0) * gridSize;
-      float wz = (y - map.height / 2.0) * gridSize;
 
-      PImage tex = null;
+      PImage texture = null;
       float size = gridSize;
 
       if (c == dullBlue) {
-        tex = rockWalls;
-        size = gridSize * 1.5;
-      } else if (c == black) {
-        tex = grassBlock;
+        if ((x + y) % 2 != 0) continue;
+        texture = rockWalls;
+        size = gridSize * 2;
       }
 
-      if (tex != null) {
-        for (int h = 1; h <= 3; h++) {
-          texturedCube(wx, height - gridSize * h, wz, tex, size);
+      if (c == black) {
+        texture = grassBlock;
+      }
+
+      float wx = (x - map.width / 2.0) * gridSize;
+      float wz = (y - map.height / 2.0) * gridSize;
+
+      if (texture != null) {
+        for (int h = 1; h <= 5; h++) {
+          texturedCube(wx, height - size * h, wz, texture, size);
         }
       }
     }
   }
 }
-
 
 
 
@@ -33,7 +36,7 @@ void drawMazeFloor() {
       if (map.get(x, y) == white) {
         float wx = (x - map.width / 2.0) * gridSize;
         float wz = (y - map.height / 2.0) * gridSize;
-        texturedCube(wx, height, wz, oakPlanks, gridSize);
+        texturedCube(wx, height, wz, floor, gridSize);
       }
     }
   }
