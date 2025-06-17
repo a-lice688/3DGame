@@ -6,7 +6,17 @@ void keyPressed() {
 
   if (key == 'W' || key == 'w') qkey = true;
   if (key == 'R' || key == 'r') ekey = true;
+
+  if (key == 'O' || key == 'o') okey = true;
+  if (key == 'L' || key == 'l') lkey = true;
+  if (key == 'P' || key == 'p') pkey = true;
+  if (key == 'C' || key == 'c') ckey = true;
+
+  if (keyCode == RIGHT) rightkey = true;
+  if (keyCode == LEFT) leftkey = true;
 }
+
+
 
 void keyReleased() {
   if (key == 'E' || key == 'e') wkey = false;
@@ -16,10 +26,14 @@ void keyReleased() {
 
   if (key == 'W' || key == 'w') qkey = false;
   if (key == 'R' || key == 'r') ekey = false;
+
+  //if (key == 'O' || key == 'o') okey = false;
+  //if (key == 'L' || key == 'l') lkey = false;
+  if (key == 'P' || key == 'p') pkey = false;
+  //if (key == 'C' || key == 'c') ckey = false;
+  if (keyCode == RIGHT) rightkey = false;
+  if (keyCode == LEFT) leftkey = false;
 }
 
 void mousePressed() {
-  for (SpellBook b : currentBooks) {
-    b.open();
-  }
 }

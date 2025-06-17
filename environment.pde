@@ -10,11 +10,10 @@ void drawMap() {
 
       if (c == dullBlue) {
         if ((x + y) % 2 != 0) continue;
-        for (int h = 1; h <= 6; h++) {
+        for (int h = 1; h <= 5; h++) {
           texturedCube(wx, height - gridSize * 2 * h, wz, rockWalls, gridSize * 2);
         }
       }
-
 
       //if (texture != null) {
       //  for (int h = 1; h <= 5; h++) {
@@ -27,29 +26,30 @@ void drawMap() {
 
 void drawObjects() {
 
-  //bookshelf #1
-  drawModels(-450, height, 200, 72, 72, 72, bookshelfModel, PI, 0, 0);
-  drawModels(-750, height, 700, 72, 72, 72, bookshelfModel, PI, HALF_PI - 2.5, 0);
-  drawModels(-750, height, -750, 72, 72, 72, bookshelfModel, PI, HALF_PI - 1, 0);
-  drawModels(700, height, 700, 72, 72, 72, bookshelfModel, PI, HALF_PI + 2.5, 0);
-  drawModels(700, height, -750, 72, 72, 72, bookshelfModel, PI, HALF_PI + 1, 0);
+  //bookshelf
+  drawModels(-450, height, 200, 72, 72, 72, bookshelfModel, PI, 0, 0); //spellbook
+  //drawModels(-750, height, 700, 72, 72, 72, bookshelfModel, PI, HALF_PI - 2.5, 0);
+  drawModels(-750, height, -750, 72, 72, 72, bookshelfModel, PI, HALF_PI - 1, 0); //spellbook
+  drawModels(700, height, 700, 72, 72, 72, bookshelfModel, PI, HALF_PI + 2.5, 0); //spellbook
+  //drawModels(700, height, -750, 72, 72, 72, bookshelfModel, PI, HALF_PI + 1, 0);
 
   //statues
-  drawModels(150, height, 350, 1, 1, 1, guardianStatue, PI, HALF_PI, 0);
-  drawModels(150, height, -300, 1, 1, 1, guardianStatue, PI, HALF_PI, 0);
+  //drawModels(150, height, 350, 1, 1, 1, guardianStatue, PI, HALF_PI, 0);
+  //drawModels(150, height, -300, 1, 1, 1, guardianStatue, PI, HALF_PI, 0);
   
-  drawModels(0, height, 0, 1, 1, 1, sakura, PI, HALF_PI, 0);
+  //tree
+  //drawModels(0, height, 0, 1, 1, 1, sakura, PI, HALF_PI, 0);
 
   //door
   world.pushMatrix();
   door.disableStyle();
   world.fill(18);
-  drawModels(0, height + 10, -950, 0.4, 0.9, 0.4, door, PI, 0, 0);
+  drawModels(0, height + 10, -950, 0.4, 0.8, 0.4, door, PI, 0, 0);
   world.popMatrix();
 
   //candles
-  drawModels(700, height - 50, 0, 0.15, 0.15, 0.15, candles, PI, HALF_PI + 1, 0);
-  objects.add(new CollisionChecker(700, height - 50, 0, gridSize));
+  //drawModels(700, height - 50, 0, 0.15, 0.15, 0.15, candles, PI, HALF_PI + 1, 0);
+  //objects.add(new CollisionChecker(700, height - 50, 0, gridSize));
 
 
   //books
@@ -84,7 +84,7 @@ void drawFloor() {
 }
 
 void drawCeiling() {
-  float ceilingY = height - gridSize * 13;
+  float ceilingY = height - gridSize * 10;
 
   for (int x = 0; x < map.width; x++) {
     for (int y = 0; y < map.height; y++) {

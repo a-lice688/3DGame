@@ -100,6 +100,14 @@ class Player {
       if (map.get(mapx, mapy) != white) {
         return false;
       }
+
+      for (GameObject obj : objects) {
+        float distSq = sq(fwdx - obj.loc.x) + sq(eye.y - obj.loc.y) + sq(fwdz - obj.loc.z);
+        float combined = obj.size / 2.0 + 30; // buffer for safety
+        if (distSq < sq(combined)) {
+          return false;
+        }
+      }
     }
 
     return true;

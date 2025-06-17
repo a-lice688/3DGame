@@ -9,25 +9,24 @@ class Particle extends GameObject {
     lives = 255;
     loc = newloc.copy();
     speed = 50;
-    float vx = random(-5, 5);
-    float vy = random(-5, 0);
-    float vz = random(-5, 5);
-    
-    vel = new PVector(vx, vy, vz);
-    vel.setMag(speed);
+
+    vel = PVector.random3D().mult(speed);
+
     gravity = new PVector(0, 5, 0);
   }
 
   void act() {
+    vel.add(gravity);
+    loc.add(vel);
+    lives--;
   }
 
   void show() {
     world.pushMatrix();
     world.translate(loc.x, loc.y, loc.z);
-    world.fill(white);
-    world.stroke(100);
-    world.box(size);
+    world.fill(255);
+    world.noStroke();
+    world.sphere(size / 2);
     world.popMatrix();
-    lives--;
   }
 }

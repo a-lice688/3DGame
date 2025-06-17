@@ -1,77 +1,122 @@
 class SpellBook extends GameObject {
-  String name;
-  String effect;
-  boolean opened = false;
-  boolean taken = false;
+  String[] bookNames = new String[2];
+  String[] bookEffects = new String[2];
 
-  SpellBook(float x, float y, float z, String name, String effect) {
+  boolean rightPressed = false;
+  boolean leftPressed = false;
+
+
+  boolean opened = false;
+  boolean learned = false;
+  boolean showPrompt = false;
+  // boolean cancelled = false;
+
+  int selected = 0;
+
+  SpellBook(float x, float y, float z, int index) {
     super(x, y, z, 80);
-    this.name = name;
-    this.effect = effect;
+    this.bookNames[0] = spellNames[index];
+    this.bookEffects[0] = spellEffects[index];
+    this.bookNames[1] = spellNames[index + 1];
+    this.bookEffects[1] = spellEffects[index + 1];
   }
 
   void act() {
+    if (opened && !learned) {
+      showPrompt = true;
+
+      if (rightkey && !rightPressed) {
+        selected = 1;
+        rightPressed = true;
+      }
+      if (!rightkey) {
+        rightPressed = false;
+      }
+
+      if (leftkey && !leftPressed) {
+        selected = 0;
+        leftPressed = true;
+      }
+      if (!leftkey) {
+        leftPressed = false;
+      }
+
+      HUDLine1 = bookNames[selected];
+      HUDLine2 = bookEffects[selected];
+
+      if (selected == 0) {
+        HUDLine3 = "Press L to learn, → to switch";
+      } else {
+        HUDLine3 = "Press L to learn, ← to switch";
+      }
+
+      if (lkey) {
+        for (int i = 0; i < spellNames.length; i++) {
+          if (spellNames[i].equals(bookNames[selected])) {
+            learnedSpells.add(spells.get(i));
+            break;
+          }
+        }
+        learned = true;
+        opened = false;
+        showPrompt = false;
+        HUDLine1 = "";
+        HUDLine2 = "";
+        HUDLine3 = "";
+        objects.remove(this);
+        currentBooks.remove(this);
+      }
+
+      if (ckey) {
+        opened = false;
+        showPrompt = false;
+        HUDLine1 = "";
+        HUDLine2 = "";
+        HUDLine3 = "";
+      }
+    }
   }
 
   void show() {
-    world.pushMatrix();
-    world.translate(loc.x, loc.y, loc.z);
-    if (opened) {
-      world.fill(color(100, 255, 200));
-    } else {
-      world.fill(color(200, 50, 100));
-    }
-    world.box(size, size / 2, size);
-    world.popMatrix();
+    if (learned) return;
 
-    if (opened && !taken) {
-      HUD.beginDraw();
-      HUD.fill(255);
-      HUD.textAlign(CENTER);
-      HUD.textSize(20);
-      HUD.text(name, width/2, height - 100);
-      HUD.text(effect, width/2, height - 70);
-      HUD.text("Click to learn this spell", width/2, height - 40);
-      HUD.endDraw();
+    if (okey) {
+      opened = true;
     }
-  }
 
-  void open() {
-    if (opened && !taken && distToPlayer() < 150) {
-      learnedSpells.add(name);
-      println("You learned: " + name);
-      taken = true;
-      lockOtherBooks();
-    }
-  }
+    drawModels(loc.x, loc.y, loc.z, 1.3, 1.3, 1.3, book, PI, HALF_PI, 0);
 
-  void lockOtherBooks() {
-    for (SpellBook b : currentBooks) {
-      if (b != this) b.taken = true; // makes other books "locked"
+    float distance = distToPlayer();
+
+    // if (cancelled && distance > 250) {
+    //   cancelled = false;
+    //   return;
+    // }
+
+    // if (distance < 250 && !cancelled) {
+
+    if (distance < 250) {
+      showPrompt = true;
+      HUDLine1 = "";
+      HUDLine2 = "";
+      HUDLine3 = "Press 'O' to open the book";
     }
   }
 
   float distToPlayer() {
-    return dist(loc.x, loc.y, loc.z, player.eye.x, player.eye.y, player.eye.z);
+    return dist(this.loc.x, this.loc.y, this.loc.z, player.eye.x, player.eye.y, player.eye.z);
   }
 }
 
+
 void generateBooks() {
   currentBooks.clear();
-  ArrayList<Integer> picked = new ArrayList<Integer>();
 
-  while (picked.size() < 3) {
-    int r = int(random(spellNames.length));
-    if (!picked.contains(r)) {
-      picked.add(r);
-    }
-  }
+  float[] xPos = { -450, 710, -760 };
+  float[] yPos = { height - 48, height - 48, height - 115 };
+  float[] zPos = { 212, 700, -755 };
 
-  for (int i = 0; i < 3; i++) {
-    int index = picked.get(i);
-    float x = -500 + i * 500;
-    float y = height - gridSize * 3.5;
-    float z = 0;
-    currentBooks.add(new SpellBook(x, y, z, spellNames[index], spellEffects[index]));
-  }
+  currentBooks.add(new SpellBook(xPos[0], yPos[0], zPos[0], 0));
+  currentBooks.add(new SpellBook(xPos[1], yPos[1], zPos[1], 2));
+  currentBooks.add(new SpellBook(xPos[2], yPos[2], zPos[2], 4));
 }
