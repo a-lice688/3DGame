@@ -25,10 +25,7 @@ String[] spellEffects = {
   "Break walls or objects"
 };
 
-String HUDLine1 = "";
-String HUDLine2 = "";
-String HUDLine3 = "";
-
+HUD hud = new HUD();
 
 String[] bookNames = new String[2];
 String[] bookEffects = new String[2];
@@ -45,6 +42,9 @@ PImage floor;
 PImage ceiling;
 
 boolean wkey, akey, skey, dkey, qkey, ekey, lkey, okey, pkey, ckey, rightkey, leftkey;
+
+boolean key1 = false;
+boolean key2 = false;
 
 PGraphics world;
 PGraphics HUD;
@@ -159,15 +159,7 @@ void draw() {
 
   HUD.beginDraw();
   HUD.clear();
-  HUD.fill(255);
-  HUD.textAlign(CENTER);
-  HUD.textSize(20);
-
-  HUD.text(HUDLine1, width / 2, height - 120);
-  HUD.text(HUDLine2, width / 2, height - 90);
-  HUD.text(HUDLine3, width / 2, height - 50);
-
-
+  hud.draw(HUD);
   HUD.endDraw();
 
   image(HUD, 0, 0);
@@ -178,4 +170,35 @@ void draw() {
   strokeWeight(weight);
   line(width / 2 - 15, height / 2, width / 2 + 15, height / 2);
   line(width / 2, height / 2 - 15, width / 2, height / 2 + 15);
+
+  key1 = false;
+  key2 = false;
+  
+}
+
+class HUD {
+  String line1 = "";
+  String line2 = "";
+  String line3 = "";
+
+  void set(String l1, String l2, String l3) {
+    line1 = l1;
+    line2 = l2;
+    line3 = l3;
+  }
+
+  void clear() {
+    line1 = "";
+    line2 = "";
+    line3 = "";
+  }
+
+  void draw(PGraphics pg) {
+    pg.fill(255);
+    pg.textAlign(CENTER);
+    pg.textSize(20);
+    pg.text(line1, width / 2, height - 120);
+    pg.text(line2, width / 2, height - 90);
+    pg.text(line3, width / 2, height - 50);
+  }
 }

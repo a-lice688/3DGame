@@ -2,13 +2,8 @@ class SpellBook extends GameObject {
   String[] bookNames = new String[2];
   String[] bookEffects = new String[2];
 
-  boolean rightPressed = false;
-  boolean leftPressed = false;
-
-
   boolean opened = false;
   boolean learned = false;
-  boolean showPrompt = false;
   // boolean cancelled = false;
 
   int selected = 0;
@@ -22,32 +17,39 @@ class SpellBook extends GameObject {
   }
 
   void act() {
+
+    float distance = distToPlayer();
+
+    if (learned) return;
+
+    if (okey) opened = true;
+
+    // Nearby but not opened or learned: show "press 'o'"
+    if (distance <= 300 && !opened && !learned) {
+      hud.set("", "", "Press 'O' to open the book");
+    }
+
+    // Not close neough
+    if (distance > 300 && !opened && !learned) {
+      hud.clear();
+    }
+
+    //opened but not learned: show spell options
     if (opened && !learned) {
-      showPrompt = true;
-
-      if (rightkey && !rightPressed) {
-        selected = 1;
-        rightPressed = true;
-      }
-      if (!rightkey) {
-        rightPressed = false;
-      }
-
-      if (leftkey && !leftPressed) {
+      
+      if (key == '1') {
+        key1 = true;
         selected = 0;
-        leftPressed = true;
       }
-      if (!leftkey) {
-        leftPressed = false;
+      if (key == '2') {
+        key2 = true;
+        selected = 1;
       }
-
-      HUDLine1 = bookNames[selected];
-      HUDLine2 = bookEffects[selected];
 
       if (selected == 0) {
-        HUDLine3 = "Press L to learn, → to switch";
+        hud.set(bookNames[0], bookEffects[0], "Press L to learn, 2 to view the second spell");
       } else {
-        HUDLine3 = "Press L to learn, ← to switch";
+        hud.set(bookNames[1], bookEffects[1], "Press L to learn, 1 to view the first spell");
       }
 
       if (lkey) {
@@ -59,34 +61,25 @@ class SpellBook extends GameObject {
         }
         learned = true;
         opened = false;
-        showPrompt = false;
-        HUDLine1 = "";
-        HUDLine2 = "";
-        HUDLine3 = "";
+        hud.clear();
+
         objects.remove(this);
         currentBooks.remove(this);
       }
 
-      if (ckey) {
-        opened = false;
-        showPrompt = false;
-        HUDLine1 = "";
-        HUDLine2 = "";
-        HUDLine3 = "";
-      }
+      //      if (ckey) {
+      //        opened = false;
+      //        showPrompt = false;
+      //        HUDLine1 = "";
+      //        HUDLine2 = "";
+      //        HUDLine3 = "";
+      //      }
     }
   }
 
   void show() {
-    if (learned) return;
-
-    if (okey) {
-      opened = true;
-    }
 
     drawModels(loc.x, loc.y, loc.z, 1.3, 1.3, 1.3, book, PI, HALF_PI, 0);
-
-    float distance = distToPlayer();
 
     // if (cancelled && distance > 250) {
     //   cancelled = false;
@@ -94,13 +87,6 @@ class SpellBook extends GameObject {
     // }
 
     // if (distance < 250 && !cancelled) {
-
-    if (distance < 250) {
-      showPrompt = true;
-      HUDLine1 = "";
-      HUDLine2 = "";
-      HUDLine3 = "Press 'O' to open the book";
-    }
   }
 
   float distToPlayer() {
@@ -116,7 +102,7 @@ void generateBooks() {
   float[] yPos = { height - 48, height - 48, height - 115 };
   float[] zPos = { 212, 700, -755 };
 
-  currentBooks.add(new SpellBook(xPos[0], yPos[0], zPos[0], 0));
-  currentBooks.add(new SpellBook(xPos[1], yPos[1], zPos[1], 2));
-  currentBooks.add(new SpellBook(xPos[2], yPos[2], zPos[2], 4));
+  currentBooks.add(new SpellBook(xPos[0], yPos[0], zPos[0], 0)); // sectumsempra and glacius
+  currentBooks.add(new SpellBook(xPos[1], yPos[1], zPos[1], 2)); // avada and imperio
+  currentBooks.add(new SpellBook(xPos[2], yPos[2], zPos[2], 4)); //
 }
