@@ -29,8 +29,8 @@ class SpellBook extends GameObject {
       hud.set("", "", "Press 'O' to open the book");
     }
 
-    // Not close neough
-    if (distance > 300 && !opened && !learned) {
+    // Not close enough
+    if (distance > 300 && !learned) {
       hud.clear();
     }
 

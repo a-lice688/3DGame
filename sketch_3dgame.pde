@@ -25,6 +25,7 @@ String[] spellEffects = {
   "Break walls or objects"
 };
 
+
 HUD hud = new HUD();
 
 String[] bookNames = new String[2];
@@ -66,6 +67,8 @@ void setup() {
   objects.add(new Particle(new PVector(0, height - 100, 0)));
 
 
+
+
   bookshelfModel = loadShape("bookshelf_with_books.obj");
   guardianStatue = loadShape("guardianstatue.obj");
   door = loadShape("anim_door.obj");
@@ -80,10 +83,13 @@ void setup() {
   spells.add(new Imperio());
   spells.add(new Reducto());
 
-  //used = new boolean[spells.size()];
-
   world = createGraphics(displayWidth, displayHeight, P3D);
   HUD = createGraphics(displayWidth, displayHeight, P2D);
+
+  //Slytherin = new Gif("zSlytherin-", ".tiff", 12, 10, 0, 0, 180, 270);
+  //Gryffindor = new Gif("zGryffindor-", ".tiff", 12, 10, 0, 0, 180, 270);
+  //Hufflepuff = new Gif("zHufflepuff-", ".tiff", 13, 10, 0, 0, 180, 270);
+  //Ravenclaw = new Gif("zRavenclaw-", ".tiff", 13, 10, 0, 0, 180, 270);
 
   rockWalls = loadImage("StoneWall.png");
   floor = loadImage("floor.png");
@@ -153,6 +159,11 @@ void draw() {
     }
   }
 
+  //GifOnWall(Slytherin, 0, height - 200, 910, -PI);
+  //GifOnWall(Gryffindor, -850, height - 200, 0, HALF_PI);
+  //GifOnWall(Hufflepuff, 890, height - 200, 0, -HALF_PI);
+  //GifOnWall(Ravenclaw, -300, height - 200, -862, PI);
+
   world.endDraw();
 
   image(world, 0, 0);
@@ -160,6 +171,7 @@ void draw() {
   HUD.beginDraw();
   HUD.clear();
   hud.draw(HUD);
+
   HUD.endDraw();
 
   image(HUD, 0, 0);
@@ -173,7 +185,6 @@ void draw() {
 
   key1 = false;
   key2 = false;
-  
 }
 
 class HUD {
